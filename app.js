@@ -10,12 +10,16 @@ dotenv.config();
 const app = express();
 
 // ---------- Middlewares ----------
+<<<<<<< HEAD
 app.use(
   cors({
     origin: "http://localhost:5173", // your Vite frontend
     credentials: true,
   })
 );
+=======
+app.use(cors());
+>>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
