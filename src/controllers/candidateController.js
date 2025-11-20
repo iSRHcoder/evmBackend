@@ -4,17 +4,15 @@ import { Candidate } from "../models/candidateModel.js";
 // ---------------- CREATE CANDIDATE -------------------
 export const createCandidate = async (req, res) => {
   try {
-<<<<<<< HEAD
     const {
-      serialNo, // FIXED (was evmSerial)
+      serialNo,
       candidateName,
       symbolName,
       constituency,
-      party, // FIXED (was missing)
+      party,
       electionDate,
     } = req.body;
 
-    // Validate required fields BEFORE doing Cloudinary upload
     if (!serialNo || !candidateName || !symbolName || !constituency || !party) {
       return res.status(400).json({
         success: false,
@@ -22,9 +20,6 @@ export const createCandidate = async (req, res) => {
           "serialNo, candidateName, symbolName, constituency and party are required.",
       });
     }
-=======
-    const { candidateName, symbolName, constituency, evmSerial } = req.body;
->>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
 
     const candidatePhotoFile = req.files?.candidatePhoto?.[0];
     const symbolImageFile = req.files?.symbolImage?.[0];
@@ -32,57 +27,41 @@ export const createCandidate = async (req, res) => {
     if (!candidatePhotoFile || !symbolImageFile) {
       return res.status(400).json({
         success: false,
-<<<<<<< HEAD
-        message: "candidatePhoto and symbolImage are required",
-=======
         message: "Both candidate photo & symbol image are required",
->>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
       });
     }
 
-    // ------- Upload candidate photo --------
     const candidatePhoto = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream({ folder: "candidates" }, (err, result) => {
-          if (err) reject(err);
-<<<<<<< HEAD
+          if (err) {
+            reject(err);
+            return;
+          }
           resolve(result.secure_url);
-=======
-          else resolve(result.secure_url);
->>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
         })
         .end(candidatePhotoFile.buffer);
     });
 
-    // ------- Upload symbol image --------
     const symbolImage = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream({ folder: "symbols" }, (err, result) => {
-          if (err) reject(err);
-<<<<<<< HEAD
+          if (err) {
+            reject(err);
+            return;
+          }
           resolve(result.secure_url);
-=======
-          else resolve(result.secure_url);
->>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
         })
         .end(symbolImageFile.buffer);
     });
 
-    // --------- Save to DB --------
     const candidate = await Candidate.create({
-<<<<<<< HEAD
       serialNo,
       candidateName,
       symbolName,
       constituency,
       party,
       electionDate,
-=======
-      candidateName,
-      symbolName,
-      constituency,
-      evmSerial,
->>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
       candidatePhoto,
       symbolImage,
     });
@@ -94,11 +73,7 @@ export const createCandidate = async (req, res) => {
     });
   } catch (err) {
     console.error("Candidate create error:", err);
-<<<<<<< HEAD
     return res.status(500).json({
-=======
-    res.status(500).json({
->>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
       success: false,
       message: "Internal server error",
     });

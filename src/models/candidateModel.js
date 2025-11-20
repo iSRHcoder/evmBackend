@@ -51,15 +51,12 @@ const candidateSchema = new mongoose.Schema(
       default: 0,
     },
 
-<<<<<<< HEAD
     party: {
       type: String,
       required: true,
       trim: true,
     },
 
-=======
->>>>>>> 6e7df337f5bd12f1e2babad2f92b842880197d83
     isActive: {
       type: Boolean,
       default: true,
