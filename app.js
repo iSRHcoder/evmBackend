@@ -11,13 +11,31 @@ const app = express();
 
 // ---------- Middlewares ----------
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://vote-your-candidate.netlify.app",
-    ], // your Vite frontend
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://vote-your-candidate.netlify.app",
+      ];
+
+      // Allow mobile apps / server-to-server (no origin)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error("Not allowed by CORS"), false);
+      }
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 

@@ -57,6 +57,8 @@ const candidateSchema = new mongoose.Schema(
       trim: true,
     },
 
+    wardNo: { type: String, required: true, trim: true },
+
     isActive: {
       type: Boolean,
       default: true,

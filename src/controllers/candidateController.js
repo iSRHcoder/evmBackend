@@ -10,6 +10,7 @@ export const createCandidate = async (req, res) => {
       symbolName,
       constituency,
       party,
+      wardNo,
       electionDate,
     } = req.body;
 
@@ -61,6 +62,7 @@ export const createCandidate = async (req, res) => {
       symbolName,
       constituency,
       party,
+      wardNo,
       electionDate,
       candidatePhoto,
       symbolImage,
