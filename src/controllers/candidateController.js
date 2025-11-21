@@ -1,5 +1,11 @@
 import cloudinary from "../config/cloudinary.js";
 import { Candidate } from "../models/candidateModel.js";
+import { customAlphabet } from "nanoid";
+
+const nanoid = customAlphabet(
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+  5
+);
 
 // ---------------- CREATE CANDIDATE -------------------
 export const createCandidate = async (req, res) => {
@@ -32,14 +38,12 @@ export const createCandidate = async (req, res) => {
       });
     }
 
+    // Upload images to Cloudinary
     const candidatePhoto = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream({ folder: "candidates" }, (err, result) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(result.secure_url);
+          if (err) reject(err);
+          else resolve(result.secure_url);
         })
         .end(candidatePhotoFile.buffer);
     });
@@ -47,16 +51,15 @@ export const createCandidate = async (req, res) => {
     const symbolImage = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream({ folder: "symbols" }, (err, result) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(result.secure_url);
+          if (err) reject(err);
+          else resolve(result.secure_url);
         })
         .end(symbolImageFile.buffer);
     });
 
+    // Create candidate (do NOT send _id)
     const candidate = await Candidate.create({
+      _id: nanoid(),
       serialNo,
       candidateName,
       symbolName,
