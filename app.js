@@ -21,7 +21,7 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = [
         "http://localhost:5173",
-        "https://vote-your-candidate.netlify.app",
+        "https://palika-vote.netlify.app",
       ];
 
       // Allow mobile apps / server-to-server (no origin)
