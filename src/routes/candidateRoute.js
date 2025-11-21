@@ -15,6 +15,7 @@ candidateRouter.post(
   upload.fields([
     { name: "candidatePhoto", maxCount: 1 },
     { name: "symbolImage", maxCount: 1 },
+    { name: "candidatePoster", maxCount: 1 },
   ]),
   createCandidate
 );

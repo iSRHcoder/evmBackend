@@ -25,6 +25,7 @@ const candidateSchema = new mongoose.Schema(
     },
     candidateName: { type: String, required: true, trim: true },
     candidatePhoto: { type: String, required: true },
+    candidatePoster: { type: String, required: true },
     symbolName: { type: String, required: true, trim: true },
     symbolImage: { type: String, required: true },
     constituency: { type: String, required: true, trim: true },
@@ -38,8 +39,5 @@ const candidateSchema = new mongoose.Schema(
     timestamps: true, // createdAt, updatedAt
   }
 );
-
-// Ensure unique candidate per serialNo + constituency
-candidateSchema.index({ serialNo: 1, constituency: 1 }, { unique: true });
 
 export const Candidate = mongoose.model("Candidate", candidateSchema);

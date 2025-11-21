@@ -20,6 +20,7 @@ export const createCandidate = async (req, res) => {
       electionDate,
     } = req.body;
 
+    // --- Required fields check ---
     if (!serialNo || !candidateName || !symbolName || !constituency || !party) {
       return res.status(400).json({
         success: false,
@@ -28,36 +29,48 @@ export const createCandidate = async (req, res) => {
       });
     }
 
+    // Read uploaded files
     const candidatePhotoFile = req.files?.candidatePhoto?.[0];
     const symbolImageFile = req.files?.symbolImage?.[0];
+    const candidatePosterFile = req.files?.candidatePoster?.[0]; // optional
 
+    // Mandatory file check (poster is optional)
     if (!candidatePhotoFile || !symbolImageFile) {
       return res.status(400).json({
         success: false,
-        message: "Both candidate photo & symbol image are required",
+        message: "Candidate photo & symbol image are required.",
       });
     }
 
-    // Upload images to Cloudinary
-    const candidatePhoto = await new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream({ folder: "candidates" }, (err, result) => {
-          if (err) reject(err);
-          else resolve(result.secure_url);
-        })
-        .end(candidatePhotoFile.buffer);
-    });
+    // Helper to upload to Cloudinary
+    const uploadToCloudinary = (file, folder) =>
+      new Promise((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ folder }, (err, result) => {
+            if (err) reject(err);
+            else resolve(result.secure_url);
+          })
+          .end(file.buffer);
+      });
 
-    const symbolImage = await new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream({ folder: "symbols" }, (err, result) => {
-          if (err) reject(err);
-          else resolve(result.secure_url);
-        })
-        .end(symbolImageFile.buffer);
-    });
+    // Upload mandatory images
+    const candidatePhoto = await uploadToCloudinary(
+      candidatePhotoFile,
+      "candidates"
+    );
 
-    // Create candidate (do NOT send _id)
+    const symbolImage = await uploadToCloudinary(symbolImageFile, "symbols");
+
+    // Upload optional poster
+    let candidatePoster = null;
+    if (candidatePosterFile) {
+      candidatePoster = await uploadToCloudinary(
+        candidatePosterFile,
+        "posters"
+      );
+    }
+
+    // Save to DB
     const candidate = await Candidate.create({
       _id: nanoid(),
       serialNo,
@@ -66,8 +79,9 @@ export const createCandidate = async (req, res) => {
       constituency,
       party,
       wardNo,
-      electionDate,
+      electionDate: electionDate || null,
       candidatePhoto,
+      candidatePoster, // can be null
       symbolImage,
     });
 
