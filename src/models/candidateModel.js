@@ -25,7 +25,7 @@ const candidateSchema = new mongoose.Schema(
     },
     candidateName: { type: String, required: true, trim: true },
     candidatePhoto: { type: String, required: true },
-    candidatePoster: { type: String, required: true },
+    candidatePoster: { type: String },
     symbolName: { type: String, required: true, trim: true },
     symbolImage: { type: String, required: true },
     constituency: { type: String, required: true, trim: true },
