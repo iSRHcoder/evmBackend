@@ -23,7 +23,7 @@ const candidateSchema = new mongoose.Schema(
         message: "Serial number must be an integer",
       },
     },
-    multipleVotes: { type: Boolean, default: false },
+    multipleVotes: { type: Boolean, default: true },
     candidateName: { type: String, required: true, trim: true },
     candidatePhoto: { type: String, required: true },
     candidatePoster: { type: String },
