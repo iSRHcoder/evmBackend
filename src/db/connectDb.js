@@ -18,8 +18,7 @@ export const connectDb = async () => {
       console.error(error.message);
 
       if (attempts === MAX_RETRIES) {
-        console.error("❌ Max retries reached. Shutting down...");
-        process.exit(1);
+        console.error("❌ Max retries reached.");
       }
 
       console.log("⏳ Retrying in 5 seconds...");
