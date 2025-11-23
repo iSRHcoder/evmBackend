@@ -46,7 +46,7 @@ app.use(morgan("dev"));
 app.use("/api/candidates", candidateRouter);
 
 app.get("/api/health", (req, res) => {
-  res.json({ message: "Backend running successfully 🚀" });
+  res.status(200).json({ message: "Backend running successfully 🚀" });
 });
 
 export default app;
