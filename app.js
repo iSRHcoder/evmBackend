@@ -45,7 +45,7 @@ app.use(morgan("dev"));
 // ---------- Routes ----------
 app.use("/api/candidates", candidateRouter);
 
-app.get("/api/health", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({ message: "Backend running successfully 🚀" });
 });
 
