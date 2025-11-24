@@ -18,7 +18,7 @@ export const createCandidate = async (req, res) => {
       party,
       wardNo,
       multipleVotes = false,
-      electionDate,
+      electionDate = "02 डिसें २०२५",
     } = req.body;
 
     // --- Required fields check ---
