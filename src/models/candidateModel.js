@@ -16,7 +16,7 @@ const candidateSchema = new mongoose.Schema(
     serialNo: {
       type: Number,
       required: true,
-      min: [1, "Serial number must be at least 1"],
+      min: [0, "Serial number must be at least 0"],
       max: [20, "Serial number must be <= 20"],
       validate: {
         validator: Number.isInteger,
