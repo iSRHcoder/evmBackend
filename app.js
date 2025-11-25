@@ -4,13 +4,15 @@ import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import candidateRouter from "./src/routes/candidateRoute.js";
+import panelRouter from "./src/routes/panelRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// ---------------- CORS FIX ----------------
-
+// ---------------------------------------
+//             CORS CONFIG
+// ---------------------------------------
 const allowedOrigins = [
   "http://localhost:5173",
   "https://palika-vote.netlify.app",
@@ -21,30 +23,50 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // mobile / postman
-      if (allowedOrigins.includes(origin)) return callback(null, true);
+      // Allow mobile apps, Postman, server-to-server requests
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.warn("❌ CORS Blocked:", origin);
       return callback(new Error("CORS blocked: " + origin), false);
     },
-    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
-// This MUST come after CORS
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// Preflight handling (important!)
+//app.options("*", cors());
 
+// ---------------------------------------
+//        BODY PARSERS & SECURITY
+// ---------------------------------------
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-app.use(helmet());
+
+// Security headers
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+
+// Logging
 app.use(morgan("dev"));
 
-// ---------- Routes ----------
-app.use("/api/candidates", candidateRouter);
+// ---------------------------------------
+//                ROUTES
+// ---------------------------------------
 
+app.use("/api/candidates", candidateRouter);
+app.use("/api/panel", panelRouter);
+
+// Health check route
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Backend running successfully 🚀" });
 });
