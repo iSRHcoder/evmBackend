@@ -7,7 +7,7 @@ export const connectDb = async () => {
   while (attempts < MAX_RETRIES) {
     try {
       const conn = await mongoose.connect(process.env.MONGO_URI, {
-        dbName: process.env.DB_NAME || "evmDB",
+        dbName: process.env.DB_NAME || "EVM",
       });
 
       console.log(`🟢 MongoDB Connected: ${conn.connection.host}`);
