@@ -71,14 +71,4 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "Backend running successfully 🚀" });
 });
 
-app.get("/test-db", async (req, res) => {
-  try {
-    await mongoose.connection.db.admin().ping();
-    res.send("MongoDB connected!");
-  } catch (err) {
-    console.error("DB connection error:", err);
-    res.status(500).send("MongoDB connection failed");
-  }
-});
-
 export default app;
